@@ -1,0 +1,50 @@
+import { Link, useParams } from "react-router-dom";
+import "./View.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const View = () => {
+  const [user, setUser] = useState({});
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    getSingleUser(id);
+  }, [id]);
+
+  const getSingleUser = async (id) => {
+    const res = await axios.get(`http://localhost:5000/users/${id}`);
+
+    if (res.status === 200) {
+      setUser({ ...res.data });
+    }
+  };
+
+  return (
+    <div className="view">
+      <div className="view-item">
+        <b>ID: </b> <span>{user.id}</span>
+      </div>
+      <div className="view-item">
+        <b>Name: </b> <span>{user.name}</span>
+      </div>
+      <div className="view-item">
+        <b>Email: </b> <span>{user.email}</span>
+      </div>
+      <div className="view-item">
+        <b>country: </b> <span>{user.country}</span>
+      </div>
+      <div className="view-item">
+        <b>Contact: </b> <span>{user.contact}</span>
+      </div>
+      <Link to={`/update/${user.id}`}>
+        <button className="btn btn-success">Edit</button>
+      </Link>
+      <Link to={`/`}>
+        <button className="btn btn-primary">Back</button>
+      </Link>
+    </div>
+  );
+};
+
+export default View;

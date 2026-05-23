@@ -52,7 +52,9 @@ const Home = () => {
                 <td>{user.contact}</td>
                 <td>
                   <div className="buttons">
-                    <button className="btn btn-primary">View</button>
+                    <Link to={`/view/${user.id}`} className="btn btn-primary">
+                      View
+                    </Link>
                     <Link to={`/update/${user.id}`} className="btn btn-success">
                       Edit
                     </Link>
