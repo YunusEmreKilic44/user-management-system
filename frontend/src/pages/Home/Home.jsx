@@ -5,16 +5,18 @@ import "./Home.css";
 const Home = () => {
   const [data, setData] = useState([]);
 
-  const getUsers = async () => {
-    const res = await axios.get("http://localhost:5000/users");
-    console.log(res.data);
-    if (res.status === 200) {
-      setData(res.data);
-    }
-  };
-
   useEffect(() => {
-    getUsers();
+    let ignore = false;
+
+    axios.get("http://localhost:5000/users").then((res) => {
+      if (!ignore && res.status === 200) {
+        setData(res.data);
+      }
+    });
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (

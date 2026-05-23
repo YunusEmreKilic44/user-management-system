@@ -1,21 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
 import "./Header.css";
-import { useEffect, useState } from "react";
 
 const Header = () => {
-  const [active, setActive] = useState("Home");
-
   const location = useLocation();
-
-  console.log(location);
-
-  useEffect(() => {
-    if (location.pathname === "/") {
-      setActive("Home");
-    } else if (location.pathname === "/add") {
-      setActive("Add");
-    }
-  }, [location]);
+  const active = location.pathname === "/add" ? "Add" : "Home";
 
   return (
     <div className="header">
