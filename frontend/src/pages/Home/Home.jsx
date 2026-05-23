@@ -1,6 +1,22 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import "./Home.css";
 
 const Home = () => {
+  const [data, setData] = useState([]);
+
+  const getUsers = async () => {
+    const res = await axios.get("http://localhost:5000/users");
+    console.log(res.data);
+    if (res.status === 200) {
+      setData(res.data);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   return (
     <div className="table-wrapper">
       <table>
@@ -15,20 +31,23 @@ const Home = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Emin</td>
-            <td>emin@gmail.com</td>
-            <td>Turkey</td>
-            <td>5555555555</td>
-            <td>
-              <div className="buttons">
-                <button className="btn btn-primary">View</button>
-                <button className="btn btn-success">Edit</button>
-                <button className="btn btn-danger">Delete</button>
-              </div>
-            </td>
-          </tr>
+          {data &&
+            data.map((user, index) => (
+              <tr key={user.id}>
+                <td>{index + 1}</td>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.country}</td>
+                <td>{user.contact}</td>
+                <td>
+                  <div className="buttons">
+                    <button className="btn btn-primary">View</button>
+                    <button className="btn btn-success">Edit</button>
+                    <button className="btn btn-danger">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
