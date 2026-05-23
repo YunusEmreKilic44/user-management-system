@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -52,7 +53,9 @@ const Home = () => {
                 <td>
                   <div className="buttons">
                     <button className="btn btn-primary">View</button>
-                    <button className="btn btn-success">Edit</button>
+                    <Link to={`/update/${user.id}`} className="btn btn-success">
+                      Edit
+                    </Link>
                     <button
                       onClick={() => onDeleteUser(user.id)}
                       className="btn btn-danger"

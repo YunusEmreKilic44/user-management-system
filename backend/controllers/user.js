@@ -74,5 +74,5 @@ export const updateUser = (req, res) => {
   user.country = country;
   user.contact = contact;
 
-  return res.send(user);
+  return res.send("Updated user");
 };

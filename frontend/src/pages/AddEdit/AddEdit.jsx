@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./AddEdit.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -13,6 +14,23 @@ const initialState = {
 const AddEdit = () => {
   const [data, setData] = useState(initialState);
   const { name, email, country, contact } = data;
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const getSingleUser = async (id) => {
+    const res = await axios.get(`http://localhost:5000/users/${id}`);
+
+    if (res.status === 200) {
+      setData({ ...res.data });
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      getSingleUser(id);
+    }
+  }, [id]);
 
   const createUser = async (data) => {
     const res = await axios.post("http://localhost:5000/users", data);
@@ -22,14 +40,28 @@ const AddEdit = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const updateUser = async (data, id) => {
+    const res = await axios.put(`http://localhost:5000/users/${id}`, data);
+
+    if (res.status === 200) {
+      toast.success(res.data);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !country || !contact) {
       toast.error("Please fill all the fields");
       return;
     }
 
-    createUser(data);
+    if (!id) {
+      await createUser(data);
+    } else {
+      await updateUser(data, id);
+    }
+
+    navigate("/");
   };
 
   const handleInputChange = (e) => {
@@ -85,7 +117,11 @@ const AddEdit = () => {
             value={contact}
           />
         </div>
-        <input type="submit" className="btn btn-success" value="Add" />
+        <input
+          type="submit"
+          className="btn btn-success"
+          value={id ? "Update" : "Add"}
+        />
       </form>
     </div>
   );
