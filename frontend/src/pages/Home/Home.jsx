@@ -5,19 +5,27 @@ import "./Home.css";
 const Home = () => {
   const [data, setData] = useState([]);
 
+  const getUsers = async () => {
+    const res = await axios.get("http://localhost:5000/users");
+    console.log(res.data);
+    if (res.status === 200) {
+      setData(res.data);
+    }
+  };
+
   useEffect(() => {
-    let ignore = false;
-
-    axios.get("http://localhost:5000/users").then((res) => {
-      if (!ignore && res.status === 200) {
-        setData(res.data);
-      }
-    });
-
-    return () => {
-      ignore = true;
-    };
+    getUsers();
   }, []);
+
+  const onDeleteUser = async (id) => {
+    if (confirm("Are you sure?")) {
+      const res = await axios.delete(`http://localhost:5000/users/${id}`);
+
+      if (res.status === 200) {
+        getUsers();
+      }
+    }
+  };
 
   return (
     <div className="table-wrapper">
@@ -45,7 +53,12 @@ const Home = () => {
                   <div className="buttons">
                     <button className="btn btn-primary">View</button>
                     <button className="btn btn-success">Edit</button>
-                    <button className="btn btn-danger">Delete</button>
+                    <button
+                      onClick={() => onDeleteUser(user.id)}
+                      className="btn btn-danger"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
